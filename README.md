@@ -2,6 +2,7 @@
 Bank Application using Dababase
 
 This is a basic bank application where you can
+
 0) exit
 1) create a new customer
 2) create a new bank account
