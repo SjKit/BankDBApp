@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PankkiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="accounts">
+          <Key>
+            <PropertyRef Name="account_number" />
+          </Key>
+          <Property Name="account_number" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="account_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="account_type" Type="int" Nullable="false" />
+          <Property Name="credit_limit" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="account_saldo" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="customer_number" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="customers">
+          <Key>
+            <PropertyRef Name="customer_number" />
+          </Key>
+          <Property Name="customer_number" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_first_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="customer_last_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="account_number" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__accounts__custom__267ABA7A">
+          <End Role="customers" Type="Self.customers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="accounts" Type="Self.accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customers">
+              <PropertyRef Name="customer_number" />
+            </Principal>
+            <Dependent Role="accounts">
+              <PropertyRef Name="customer_number" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PankkiModelStoreContainer">
+          <EntitySet Name="accounts" EntityType="Self.accounts" Schema="pankki" store:Type="Tables" />
+          <EntitySet Name="customers" EntityType="Self.customers" Schema="pankki" store:Type="Tables" />
+          <AssociationSet Name="FK__accounts__custom__267ABA7A" Association="Self.FK__accounts__custom__267ABA7A">
+            <End Role="customers" EntitySet="customers" />
+            <End Role="accounts" EntitySet="accounts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PankkiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="accounts">
+          <Key>
+            <PropertyRef Name="account_number" />
+          </Key>
+          <Property Name="account_number" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="account_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="account_type" Type="Int32" Nullable="false" />
+          <Property Name="credit_limit" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="account_saldo" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="customer_number" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="customers" Relationship="Self.FK__accounts__custom__267ABA7A" FromRole="accounts" ToRole="customers" />
+        </EntityType>
+        <EntityType Name="customers">
+          <Key>
+            <PropertyRef Name="customer_number" />
+          </Key>
+          <Property Name="customer_number" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_first_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="customer_last_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="account_number" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="accounts" Relationship="Self.FK__accounts__custom__267ABA7A" FromRole="customers" ToRole="accounts" />
+        </EntityType>
+        <Association Name="FK__accounts__custom__267ABA7A">
+          <End Role="customers" Type="Self.customers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="accounts" Type="Self.accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customers">
+              <PropertyRef Name="customer_number" />
+            </Principal>
+            <Dependent Role="accounts">
+              <PropertyRef Name="customer_number" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PankkiEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="accounts" EntityType="Self.accounts" />
+          <EntitySet Name="customers" EntityType="Self.customers" />
+          <AssociationSet Name="FK__accounts__custom__267ABA7A" Association="Self.FK__accounts__custom__267ABA7A">
+            <End Role="customers" EntitySet="customers" />
+            <End Role="accounts" EntitySet="accounts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PankkiModelStoreContainer" CdmEntityContainer="PankkiEntities">
+          <EntitySetMapping Name="accounts">
+            <EntityTypeMapping TypeName="PankkiModel.accounts">
+              <MappingFragment StoreEntitySet="accounts">
+                <ScalarProperty Name="account_number" ColumnName="account_number" />
+                <ScalarProperty Name="account_name" ColumnName="account_name" />
+                <ScalarProperty Name="account_type" ColumnName="account_type" />
+                <ScalarProperty Name="credit_limit" ColumnName="credit_limit" />
+                <ScalarProperty Name="account_saldo" ColumnName="account_saldo" />
+                <ScalarProperty Name="customer_number" ColumnName="customer_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customers">
+            <EntityTypeMapping TypeName="PankkiModel.customers">
+              <MappingFragment StoreEntitySet="customers">
+                <ScalarProperty Name="customer_number" ColumnName="customer_number" />
+                <ScalarProperty Name="customer_first_name" ColumnName="customer_first_name" />
+                <ScalarProperty Name="customer_last_name" ColumnName="customer_last_name" />
+                <ScalarProperty Name="account_number" ColumnName="account_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
