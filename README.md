@@ -28,6 +28,7 @@ You can copy below code and run it e.g. in Microsoft SQL Server Management Studi
 /* Schema */
 
 CREATE SCHEMA pankki;
+
 go
 
 BEGIN TRANSACTION;
