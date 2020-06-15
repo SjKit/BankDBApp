@@ -67,4 +67,3 @@ drop table pankki.customers;
 drop table pankki.accounts;
 
 drop schema pankki;
-
