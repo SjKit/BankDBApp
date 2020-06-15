@@ -61,6 +61,8 @@ After running the code check that schema and table creations were succeeded. If 
 
 When database is no longer needed (you don't want to run the application any more), you can drop the tables and the schema by copying below code and running it in Microsoft SQL Server Management Studio.
 
+******************************
+
 /* Drop tables when needed in this order*/
 
 drop table pankki.customers;
