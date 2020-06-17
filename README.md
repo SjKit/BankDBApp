@@ -1,5 +1,5 @@
 # BankDBApp
-Bank Application using Dababase
+Bank Application using Database
 
 This is a basic bank application where you can
 
@@ -17,12 +17,12 @@ When you create customers and accounts, the data will be stored into database. I
 
 Exit the application by value 0.
 
-DATABASE PART - DO THIS FIRST
+## DATABASE PART - DO THIS FIRST
 
 You can copy below code and run it e.g. in Microsoft SQL Server Management Studio.
 
 ******************************
-
+```
 /* Create schema and tables into database */
   
 /* Schema */
@@ -54,7 +54,7 @@ customer_number INT NOT NULL FOREIGN KEY REFERENCES pankki.customers(customer_nu
 );
 
 COMMIT;
-
+```
 ******************************
 
 After running the code check that schema and table creations were succeeded. If succeeded, you can run the application in Visual Studio by opening BankDBApp.sln.
@@ -62,7 +62,7 @@ After running the code check that schema and table creations were succeeded. If 
 When database is no longer needed (you don't want to run the application any more), you can drop the tables and the schema by copying below code and running it in Microsoft SQL Server Management Studio.
 
 ******************************
-
+```
 /* Drop tables when needed in this order*/
 
 drop table pankki.customers;
@@ -70,3 +70,4 @@ drop table pankki.customers;
 drop table pankki.accounts;
 
 drop schema pankki;
+```
