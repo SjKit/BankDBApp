@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace BankDBApp
 {
 
-    // SKI Changed 27.5.2020
     public static class BankDefs
     {
+        // Account types
         public const int BankAccount = 1;
         public const int CreditAccount = 2;
 
@@ -26,9 +26,11 @@ namespace BankDBApp
             context = new PankkiEntities();
             
             // App title
-            Console.WriteLine("BANK");
-            Console.WriteLine("====");
+            Console.WriteLine("                           BANK APPLICATION");
+            Console.WriteLine("                           ================");
+
             bool leaveBank = default;
+
             do
             {
                 switch (GUIMainDisplay())
@@ -36,6 +38,7 @@ namespace BankDBApp
                     case 0:
                         leaveBank = true;
                         Console.WriteLine("Leaving Bank...");
+                        Console.WriteLine("Press <return> to exit");
                         break;
                     case 1:
                         GUICreateCustomer();
@@ -46,7 +49,6 @@ namespace BankDBApp
                     case 3:
                         GUICreateCreditAccount();
                         break;
-                    // SKI Changed 27.5.2020
                     case 4:
                         GUIMoveAccountToOtherCustomer();
                         break;
@@ -74,6 +76,7 @@ namespace BankDBApp
             Console.ReadLine();
         }
 
+        // Method for displaying the Main menu
         private static int GUIMainDisplay()
         {
             bool validResponse = false;
@@ -81,19 +84,18 @@ namespace BankDBApp
 
             do
             {
-                // SKI Changed 27.5.2020
                 Console.WriteLine(@"
                            Select Activity (0 to 10)
-                           0) Lopetus
-                           1) Uusi Asiakas
-                           2) Uusi Pankkitili
-                           3) Uusi Luottotili
-                           4) Siirrä tili toiselle asiakkaalle
-                           5) Näytä asiakkaat
-                           6) Näytä tilit
-                           7) Poista asiakas
-                           8) Poista tili
-                           9) Tee tilitapahtumia (nosto ja talletus)
+                           0) Exit
+                           1) New customer
+                           2) New Bank Account
+                           3) New Credit Bank Account
+                           4) Move account to the other customer
+                           5) Show customers
+                           6) Show accounts
+                           7) Delete customer
+                           8) Delete account
+                           9) Make withdrawal or deposit
                         ");
 
                 string guessInput = Console.ReadLine();
@@ -104,16 +106,24 @@ namespace BankDBApp
 
             return response;
         }
+
+        // Method for creating customer
+        // First and last name asked.
+        // After confirming customer is created in database.
         private static void GUICreateCustomer()
         {
             Console.WriteLine(@"
                            Customer First Name?
             ");
+
             string firstInput = Console.ReadLine();
+
             Console.WriteLine(@"
                            Customer Family Name?
             ");
+
             string familyInput = Console.ReadLine();
+
             if (confirmInput())
             {
                 var newCustomer = new customers()
@@ -121,21 +131,19 @@ namespace BankDBApp
                     customer_first_name = firstInput,
                     customer_last_name = familyInput,
                 };
+
                 context.customers.Add(newCustomer);
                 context.SaveChanges();
             }
         }
 
-        // SKI Changed 27.5.2020
+        // Method for creating bank account
         private static void GUICreateBankAccount()
         {
-            //bool validResponse = false;
             int customerNumber = default;
             decimal creditLimit = default;
             decimal currentSaldo = default;
 
-
-            // SKI Changed 27.5.2020
             // Ask customer and saldo for new account
             GUIAskCustomerNumberAndSaldo(out customerNumber, out currentSaldo);
 
@@ -158,21 +166,20 @@ namespace BankDBApp
             }
         }
 
-        // SKI Changed 27.5.2020
+        // Method for creating account
         private static void GUICreateCreditAccount()
         {
-            // SKI
             int customerNumber = default;
             decimal creditLimit = default;
             decimal currentSaldo = default;
 
-            // SKI get customer and set saldo for new account
+            // Get customer and set saldo for new account
             GUIAskCustomerNumberAndSaldo(out customerNumber, out currentSaldo);
 
-            // SKI set credit limit for new account
+            // Set credit limit for new account
             GUIAskSaldo("CreditLimitSaldo", out creditLimit);
             
-            // SKI create the credit account
+            // Create the credit account
             if (confirmInput())
             {
                 var henkilö = context.customers.FirstOrDefault<customers>
@@ -193,7 +200,10 @@ namespace BankDBApp
 
         }
         
-        // SKI Changed 27.5.2020
+        // Method for moving account to the other customer
+        // Showing the Account List which account is going to be moved.
+        // Showing the Customer List to whom the account is going to be moved.
+        // After confirming account is moved to new owner and saved in database.
         private static void GUIMoveAccountToOtherCustomer()
         {
             int response = default;
@@ -237,6 +247,7 @@ namespace BankDBApp
 
         }
 
+        // Method for showing Customer List
         private static void GUIShowCustomer()
         {
             Console.WriteLine(@"
@@ -254,7 +265,7 @@ namespace BankDBApp
             foreach (var iter in list)
             {
                 Console.Write("  " + iter.Customer);
-                Console.Write(" Tilisi ovat: ");
+                Console.Write(" Your accounts are: ");
                 
                 foreach (accounts iter2 in context.accounts)
                 {
@@ -262,14 +273,14 @@ namespace BankDBApp
                     {
                         string accountType = iter2.account_type.ToString();
 
-                        // SKI Check the type and set the right one to be shown
+                        // Check the type and set the right one to be shown
                         if (accountType.Equals(BankDefs.BankAccount.ToString()))
                         {
-                            accountType = "Pankki";
+                            accountType = "Bank";
                         }
                         else
                         {
-                            accountType = "Luotto";
+                            accountType = "Credit";
                         }
 
                         Console.Write(iter2.account_number + " (" + accountType + "), ");
@@ -278,10 +289,12 @@ namespace BankDBApp
 
                 Console.WriteLine("");
             }
-            Console.WriteLine(""); // SKI
+            Console.WriteLine("");
             Console.WriteLine("Press Key to continue");
             Console.ReadLine();
         }
+        
+        // Method for showing Account List
         private static void GUIShowAccount()
         {
             Console.WriteLine(@"
@@ -290,11 +303,11 @@ namespace BankDBApp
             
             foreach (accounts iter in context.accounts)
             {
-                Console.Write("Tili " + iter.account_number + " (");
-                Console.Write("Nimi " + iter.account_name + ", ");
+                Console.Write("Account " + iter.account_number + " (");
+                Console.Write("Name " + iter.account_name + ", ");
                 Console.Write("Saldo " + iter.account_saldo + ", ");
-                Console.Write("Limiitti " + iter.credit_limit + "), "); // SKI
-                Console.WriteLine(""); // SKI
+                Console.Write("Limit " + iter.credit_limit + "), ");
+                Console.WriteLine("");
             }
 
             Console.WriteLine("");
@@ -303,8 +316,9 @@ namespace BankDBApp
             Console.ReadLine();
         }
 
-        // SKI Changed 27.5.2020
         // Method for asking customer number and saldo
+        // Parameters
+        // out: customer number given by user, saldo given by user
         private static void GUIAskCustomerNumberAndSaldo(out int customerNumber, out decimal currentSaldo)
         {
             // Show customers
@@ -318,8 +332,10 @@ namespace BankDBApp
 
         }
 
-        // SKI Changed 27.5.2020
         // Method for asking customer number or account number
+        // Parameters
+        // in: what kind of question would be asked
+        // out: user's input for number (customer or account number)
         private static void GUIAskCustomerOrAccountNumber(string question, out int outNumber)
         {
             bool validResponse = false;
@@ -354,8 +370,10 @@ namespace BankDBApp
             } while (!validResponse);
         }
 
-        // SKI Changed 27.5.2020
         // Method for asking saldo
+        // Parameters 
+        // in: what kind of question would be asked
+        // out: user's input for saldo
         private static void GUIAskSaldo(string question, out decimal saldo)
         {
             bool validResponse = false;
@@ -381,25 +399,30 @@ namespace BankDBApp
                 Console.WriteLine(questionClause);
 
                 string guessInput = Console.ReadLine();
-                // convert string to number                
+                // Convert string to number                
                 validResponse = decimal.TryParse(guessInput, out saldo);
 
             } while (!validResponse);
 
         }
 
+        // Method for deleting customer
+        // When customer has accounts, deleting is not allowed.
         private static void GUIDeleteCustomer()
         {
             GUIShowCustomer();
+
             bool validResponse = false;
             int response;
+
             do
             {
                 Console.WriteLine(@"
                            Select Customernumber to be deleted
                         ");
+
                 string guessInput = Console.ReadLine();
-                // convert string to number
+                // Convert string to number
                 validResponse = int.TryParse(guessInput, out response);
             } while (!validResponse);
 
@@ -419,23 +442,26 @@ namespace BankDBApp
                 else
                 {
                     Console.WriteLine("Cannot remove customer with accounts!");
-                }
-
-                
+                }              
             }
         }
+        
+        // Method for deleting account
         private static void GUIDeleteAccount()
         {
             GUIShowAccount();
+
             bool validResponse = false;
             int response;
+
             do
             {
                 Console.WriteLine(@"
                            Select Account number to be deleted
                         ");
+
                 string guessInput = Console.ReadLine();
-                // convert string to number
+                // Convert string to number
                 validResponse = int.TryParse(guessInput, out response);
             } while (!validResponse);
             
@@ -448,6 +474,10 @@ namespace BankDBApp
                 context.SaveChanges();
             }
         }
+
+        // Method for changing saldo
+        // When account is limit account and there is not enough limit,
+        // changing is not allowed.
         private static void GUIChangeSaldo()
         {
             GUIShowAccount();
@@ -455,10 +485,8 @@ namespace BankDBApp
             int response = default;
             decimal response2 = default;
 
-            // SKI Changed 27.5.2020
             GUIAskCustomerOrAccountNumber("ChangeSaldo", out response);
-
-            // SKI Changed 27.5.2020         
+        
             GUIAskSaldo("ChangeSaldo", out response2);
 
             if (confirmInput())
@@ -466,7 +494,6 @@ namespace BankDBApp
                 accounts dummy = context.accounts.FirstOrDefault<accounts>
                     (x => x.account_number.Equals(response));
 
-                // SKI Changed 27.5.2020
                 if (dummy.account_type.Equals(BankDefs.CreditAccount))
                 {
                     decimal? chandedSaldo = dummy.account_saldo + response2;
@@ -476,6 +503,7 @@ namespace BankDBApp
                         dummy.account_saldo += response2;
 
                         context.SaveChanges();
+
                         Console.WriteLine($"Account { response} saldo changed ...");
                     }
                     else if (chandedSaldo >= -dummy.credit_limit)
@@ -483,11 +511,13 @@ namespace BankDBApp
                         dummy.account_saldo += response2;
 
                         context.SaveChanges();
+
                         Console.WriteLine($"Account { response} saldo using credit now ...");
                     }
                     else
                     {
                         decimal? limitLeft = dummy.account_saldo + dummy.credit_limit;
+
                         Console.WriteLine($"Account { response} dont have enough limit, your limit is {limitLeft}");
                     }                    
                 }
@@ -496,20 +526,25 @@ namespace BankDBApp
                     dummy.account_saldo += response2;
 
                     context.SaveChanges();
+
                     Console.WriteLine($"Account { response} saldo changed ...");
                 }
             }
         }
 
+        // Method for asking input confirm
         private static bool confirmInput()
         {
             bool response = default;
+
             Console.WriteLine("Confirm Y/N?");
             string confirmInput = Console.ReadLine();
+
             if (confirmInput.ToUpper() == "Y")
             {
                 return true;
             }
+
             return response;
         }
     }
